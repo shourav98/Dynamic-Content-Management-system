@@ -64,6 +64,7 @@
 
         <!-- ── Subcategories with their content ── -->
         {% for subcat in cat.subcategories.all %}
+        {% if subcat.contents.all or subcat.articles.all %}
         <section class="content-card mb-4" aria-label="{{ subcat.name }}">
             <h2 class="section-heading">{{ subcat.name }}</h2>
             <div class="divider-line"></div>
@@ -108,30 +109,13 @@
             <!-- Article body with interactive inline elements -->
             {% for article in subcat.articles.all %}
             <div class="article-body {{ article.is_premium|yesno:'premium-article,' }}" id="article-{{ article.pk }}">
-                <h3 class="article-title">{{ article.title }}</h3>
                 <div class="article-text rich-content">{{ article.body|safe }}</div>
             </div>
             {% endfor %}
 
-            <!-- Inline Explanatory Links for this sub-category -->
-            {% if subcat.explanatory_links.all %}
-            <div class="explanation-triggers mt-2">
-                {% for link in subcat.explanatory_links.all %}
-                <span
-                    class="inline-explanation-trigger"
-                    data-explanation-id="{{ link.pk }}"
-                    data-url="{% url 'cms:explanation_modal' link.pk %}"
-                    data-bs-toggle="modal"
-                    data-bs-target="#explanationModal"
-                    id="exp-{{ link.pk }}"
-                    title="Click to see explanation">
-                    {{ link.trigger_text }}
-                    <i class="bi bi-info-circle-fill"></i>
-                </span>
-                {% endfor %}
-            </div>
-            {% endif %}
+
         </section>
+        {% endif %}
         {% endfor %}
 
         <!-- ── Main articles for the root category ── -->
@@ -148,27 +132,7 @@
         </section>
         {% endfor %}
 
-        <!-- ── Explanatory Links for root category ── -->
-        {% if cat.explanatory_links.all %}
-        <section class="content-card mb-4">
-            <h2 class="section-heading">Interactive Explanations</h2>
-            <div class="divider-line"></div>
-            <div class="d-flex flex-wrap gap-2 mt-2">
-                {% for link in cat.explanatory_links.all %}
-                <span
-                    class="inline-explanation-trigger"
-                    data-explanation-id="{{ link.pk }}"
-                    data-url="{% url 'cms:explanation_modal' link.pk %}"
-                    data-bs-toggle="modal"
-                    data-bs-target="#explanationModal"
-                    id="exp-root-{{ link.pk }}">
-                    {{ link.trigger_text }}
-                    <i class="bi bi-info-circle-fill"></i>
-                </span>
-                {% endfor %}
-            </div>
-        </section>
-        {% endif %}
+
 
     </div>
     <!-- END LEFT COLUMN -->

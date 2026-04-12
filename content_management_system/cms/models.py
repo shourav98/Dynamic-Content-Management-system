@@ -62,15 +62,15 @@ class ContentItem(models.Model):
         return f"{self.get_content_type_display()} — {self.title}"
 
     def get_embed_url(self):
-        """Convert YouTube watch URL to embed URL."""
+        """Convert YouTube watch URL to embed URL, avoiding localhost CORS/cookies errors."""
         if self.youtube_url:
             url = self.youtube_url
             if 'watch?v=' in url:
                 video_id = url.split('watch?v=')[1].split('&')[0]
-                return f'https://www.youtube.com/embed/{video_id}'
+                return f'https://www.youtube-nocookie.com/embed/{video_id}'
             elif 'youtu.be/' in url:
                 video_id = url.split('youtu.be/')[1].split('?')[0]
-                return f'https://www.youtube.com/embed/{video_id}'
+                return f'https://www.youtube-nocookie.com/embed/{video_id}'
         return self.youtube_url
 
 

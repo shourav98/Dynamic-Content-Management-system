@@ -51,6 +51,7 @@
         {% endif %}
 
         {% for subcat in subcategories %}
+        {% if subcat.contents.all or subcat.articles.all %}
         <section class="content-card mb-4">
             <h2 class="section-heading">{{ subcat.name }}</h2>
             <div class="divider-line"></div>
@@ -92,28 +93,12 @@
 
             {% for article in subcat.articles.all %}
             <div class="article-body" id="article-{{ article.pk }}">
-                <h3 class="article-title">{{ article.title }}</h3>
                 <div class="article-text rich-content">{{ article.body|safe }}</div>
             </div>
             {% endfor %}
 
-            {% if subcat.explanatory_links.all %}
-            <div class="explanation-triggers mt-2">
-                {% for link in subcat.explanatory_links.all %}
-                <span
-                    class="inline-explanation-trigger"
-                    data-explanation-id="{{ link.pk }}"
-                    data-url="{% url 'cms:explanation_modal' link.pk %}"
-                    data-bs-toggle="modal"
-                    data-bs-target="#explanationModal"
-                    id="exp-{{ link.pk }}">
-                    {{ link.trigger_text }}
-                    <i class="bi bi-info-circle-fill"></i>
-                </span>
-                {% endfor %}
-            </div>
-            {% endif %}
         </section>
+        {% endif %}
         {% endfor %}
 
         {% for article in category.articles.all %}

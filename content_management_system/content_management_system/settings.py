@@ -149,5 +149,6 @@ CKEDITOR_CONFIGS = {
         'height': 300,
         'width': '100%',
         'extraPlugins': 'colorbutton,font',
+        'allowedContent': True,
     },
 }

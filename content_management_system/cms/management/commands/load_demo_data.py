@@ -105,9 +105,72 @@ class Command(BaseCommand):
             category=root,
             content_type='youtube',
             title='YouTube',
-            youtube_url='https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+            youtube_url='https://www.youtube.com/watch?v=YE7VzlLtp-4',
             text_content='<p>YouTube videos are embedded directly. Just paste the URL in the admin panel.</p>',
             order=5,
+        )
+
+        self.stdout.write(self.style.SUCCESS('Creating explanatory links...'))
+
+        # ── Explanatory Links ──
+        link1 = ExplanatoryLink.objects.create(
+            category=news_cat,
+            trigger_text='সন্দেহে',
+            explanation_title='সন্দেহে — Suspect Details',
+            explanation_text='''
+                <p>এই মামলায় মূল সন্দেহভাজন হলেন <strong>৪ জন ব্যক্তি</strong> যারা একটি সংঘবদ্ধ চক্রের সদস্য।</p>
+                <p>তারা দীর্ঘদিন ধরে বিভিন্ন জুয়েলারি দোকানে চুরির ঘটনা ঘটিয়ে আসছিল।
+                পুলিশ তাদের মোবাইল ফোনের টাওয়ার লোকেশন ট্র্যাক করে গ্রেফতার করে।</p>
+            ''',
+        )
+
+        link2 = ExplanatoryLink.objects.create(
+            category=news_cat,
+            trigger_text='Audio 🔍',
+            explanation_title='Audio Evidence',
+            explanation_text='''
+                <p>তদন্তকারীরা ফোন রেকর্ডিং থেকে গুরুত্বপূর্ণ <strong>অডিও প্রমাণ</strong> সংগ্রহ করেছেন।</p>
+                <p>এই অডিও ক্লিপগুলোতে চুরির পরিকল্পনা এবং স্বর্ণ বণ্টনের আলোচনা রেকর্ড হয়েছে।</p>
+            ''',
+        )
+
+        link3 = ExplanatoryLink.objects.create(
+            category=news_cat,
+            trigger_text='সমন্বয়কারী',
+            explanation_title='সমন্বয়কারী — Coordinator Role',
+            explanation_text='''
+                <p><strong>নুরুল ইসলাম</strong> এই চক্রের প্রধান সমন্বয়কারী ছিলেন।</p>
+                <p>তিনি মোটরসাইকেলে করে বিভিন্ন মার্কেট পরিদর্শন (রেকি) করতেন এবং
+                চুরির জন্য উপযুক্ত দোকান চিহ্নিত করতেন। তার কাছ থেকে রেকি করার সময়ের
+                ভিডিও ফুটেজও উদ্ধার করা হয়েছে।</p>
+            ''',
+        )
+
+        link4 = ExplanatoryLink.objects.create(
+            category=news_cat,
+            trigger_text='🖼️ স্বর্ণ',
+            explanation_title='স্বর্ণ — Gold Recovery Image',
+            explanation_text='''
+                <p>উদ্ধারকৃত স্বর্ণের ছবি এবং বিবরণ:</p>
+                <ul>
+                    <li>মোট উদ্ধার: <strong>১৯০ ভরি</strong></li>
+                    <li>প্রকার: নেকলেস, ব্রেসলেট, রিং, কানের দুল</li>
+                    <li>আনুমানিক বাজার মূল্য: <strong>৩ কোটি টাকা</strong></li>
+                </ul>
+                <p>বাকি স্বর্ণ খুঁজতে তদন্ত চলছে।</p>
+            ''',
+        )
+
+        link5 = ExplanatoryLink.objects.create(
+            category=news_cat,
+            trigger_text='🎬 স্বর্ণ',
+            explanation_title='স্বর্ণ — Video Evidence',
+            explanation_text='''
+                <p>CCTV ফুটেজ এবং ভিডিও প্রমাণ থেকে জানা যায়:</p>
+                <p>চোরেরা রাত ২টায় দোকানের পিছনের দরজা দিয়ে প্রবেশ করে।
+                তারা মাত্র <strong>১৫ মিনিটে</strong> পুরো অপারেশন সম্পন্ন করে।</p>
+                <p>ডিবি এই ভিডিও ফুটেজ বিশ্লেষণ করে অপরাধীদের শনাক্ত করেছে।</p>
+            ''',
         )
 
         self.stdout.write(self.style.SUCCESS('Creating articles...'))
@@ -116,36 +179,30 @@ class Command(BaseCommand):
         article1 = ArticleContent.objects.create(
             category=news_cat,
             title='News Article with Interactive Elements',
-            body='''
+            body=f'''
                 <p>রাজধানীর ফরচুন শপিং মলের শপিং জুয়েলার্স থেকে ৫০০ স্বর্ণের চুরির চাঞ্চল্যকর ঘটনার রহস্য উদঘাটন করেছে ঢাকা
-                মহানগর গোয়েন্দা পুলিশ (ডিবি)। দুর্ধর্ষ এই চুরির ঘটনায় জড়িত
-                <strong style="color: #d32f2f;">সন্দেহে</strong>
-                <a class="explanation-link" data-explanation-id="1" href="#" style="color: #d32f2f; font-weight: bold;">🔍</a>
+                মহানগর গোয়েন্দা পুলিশ (ডিবি)। দুর্ধর্ষ এই চুরির ঘটনায় জড়িত 
+                <a class="explanation-link" data-explanation-id="{link1.pk}" href="#" style="color: #d32f2f; font-weight: bold;">সন্দেহে</a> 
                 চার জনকে গ্রেফতার করা হয়েছে এবং তাদের
                 কাছ থেকে বিপুল পরিমাণ চোরাই স্বর্ণালংকার উদ্ধার করা হয়েছে বলে জানিয়েছে ডিবি।</p>
 
-                <p>ডিবির তিনটি টিম টানা ৭২ ঘণ্টা দেশের বিভিন্ন স্থানে অভিযান চালায়। প্রথমে চট্টগ্রাম থেকে শাহীন মাতব্বরকে গ্রেফতার ও
-                ফরিদপুর
-                <span style="color: #1a0a91; font-weight: bold;">🔊 Audio</span>
-                <a class="explanation-link" data-explanation-id="2" href="#" style="color: #1a0a91; font-weight: bold;">🔍</a>
+                <p>ডিবির তিনটি টিম টানা ৭২ ঘণ্টা দেশের বিভিন্ন স্থানে অভিযান চালায়। প্রথমে চট্টগ্রাম থেকে শাহীন মাতব্বরকে গ্রেফতার ও 
+                ফরিদপুর 
+                <a href="#" data-bs-toggle="modal" data-bs-target="#dynamicModal" data-url="/content/{audio_item.pk}/modal/" class="content-link" style="color: #1a0a91; font-weight: bold;">🔊 Audio</a> 
                 থেকে স্বর্ণ উদ্ধার করা হয়। পরে বরিশাল থেকে আরও দুই জনকে গ্রেফতার করা হয়েছে। ঢাকা
-                থেকে ডিবি গ্রেফতার করে এই চক্রের
-                <strong style="color: #d32f2f;">সমন্বয়কারী</strong>
-                <a class="explanation-link" data-explanation-id="3" href="#" style="color: #d32f2f; font-weight: bold;">🔍</a>
-                নুরুল ইসলামকে, যে মোটরসাইকেল ব্যবহার করে মার্কেটের রেকি
-                করতো।</p>
+                থেকে ডিবি গ্রেফতার করে এই চক্রের 
+                <a class="explanation-link" data-explanation-id="{link3.pk}" href="#" style="color: #d32f2f; font-weight: bold;">সমন্বয়কারী</a> 
+                নুরুল ইসলামকে, যে মোটরসাইকেল ব্যবহার করে মার্কেটের রেকি করতো।</p>
 
                 <p>উদ্ধার ১৯০ ভরি, বাকি স্বর্পের কোথায় আছে প্রশ্নে তিনি বলেন, চুরি যাওয়া স্বর্পের মালিক দাবি করেছেন, তার দোকানে মোট
-                ৫০০ ভরি স্বর্ণ ছিল। তবে উদ্ধার হয়েছে ১৯০ ভরি। বাকি
-                <span style="color: #d32f2f; font-weight: bold;">🖼️ স্বর্ণ</span>
-                <a class="explanation-link" data-explanation-id="4" href="#" style="color: #d32f2f; font-weight: bold;">🔍</a>
+                ৫০০ ভরি স্বর্ণ ছিল। তবে উদ্ধার হয়েছে ১৯০ ভরি। বাকি 
+                <a href="#" data-bs-toggle="modal" data-bs-target="#dynamicModal" data-url="/content/{image_item.pk}/modal/" class="content-link" style="color: #d32f2f; font-weight: bold;">🖼️ স্বর্ণ</a> 
                 কোথায় আছে তা জানতে ডিবি তদন্ত অব্যাহত
                 রেখেছে। একজন আসামি এখনও পলাতক। তাকে গ্রেফতার করতে পারলে বাকি স্বর্পের অবস্থান জানা যাবে।</p>
 
                 <p>উদ্ধার ১৯০ ভরি, বাকি স্বর্পের কোথায় আছে প্রশ্নে তিনি বলেন, চুরি যাওয়া স্বর্পের মালিক দাবি করেছেন, তার দোকানে মোট
-                ৫০০ ভরি স্বর্ণ ছিল। তবে উদ্ধার হয়েছে ১৮০ ভরি। বাকি
-                <span style="color: #d32f2f; font-weight: bold;">🎬 স্বর্ণ</span>
-                <a class="explanation-link" data-explanation-id="5" href="#" style="color: #d32f2f; font-weight: bold;">🔍</a>
+                ৫০০ ভরি স্বর্ণ ছিল। তবে উদ্ধার হয়েছে ১৮০ ভরি। বাকি 
+                <a href="#" data-bs-toggle="modal" data-bs-target="#dynamicModal" data-url="/content/{video_item.pk}/modal/" class="content-link" style="color: #d32f2f; font-weight: bold;">🎬 স্বর্ণ</a> 
                 কোথায় আছে তা জানতে ডিবি তদন্ত অব্যাহত
                 রেখেছে। একজন আসামি এখনও পলাতক। তাকে গ্রেফতার করতে পারলে বাকি স্বর্পের অবস্থান জানা যাবে।</p>
             ''',
@@ -158,15 +215,15 @@ class Command(BaseCommand):
         ExpandableSection.objects.create(
             category=root,
             title='Introduction',
-            body='''
+            body=f'''
                 <p>এই ইন্টারেক্টিভ শিক্ষা প্ল্যাটফর্মে আপনাকে স্বাগতম। এখানে আপনি বিভিন্ন ধরনের
                 মাল্টিমিডিয়া কন্টেন্ট দেখতে এবং ইন্টারঅ্যাক্ট করতে পারবেন।</p>
                 <ul>
-                    <li><strong>Text</strong> — Rich formatted text with bold, italic, underline, highlighting</li>
-                    <li><strong>Image</strong> — View images in a dynamic modal</li>
-                    <li><strong>Audio</strong> — Listen to audio files</li>
-                    <li><strong>Video</strong> — Play local video files</li>
-                    <li><strong>YouTube</strong> — Watch embedded YouTube videos</li>
+                    <li><a href="#" data-bs-toggle="modal" data-bs-target="#dynamicModal" data-url="/content/{text_item.pk}/modal/" class="content-link fw-bold text-decoration-none">Text 🔍</a> — Rich formatted text with bold, italic, underline, highlighting</li>
+                    <li><a href="#" data-bs-toggle="modal" data-bs-target="#dynamicModal" data-url="/content/{image_item.pk}/modal/" class="content-link fw-bold text-decoration-none text-success">Image 🔍</a> — View images in a dynamic modal</li>
+                    <li><a href="#" data-bs-toggle="modal" data-bs-target="#dynamicModal" data-url="/content/{audio_item.pk}/modal/" class="content-link fw-bold text-decoration-none text-primary">Audio 🔍</a> — Listen to audio files</li>
+                    <li><a href="#" data-bs-toggle="modal" data-bs-target="#dynamicModal" data-url="/content/{video_item.pk}/modal/" class="content-link fw-bold text-decoration-none text-warning">Video 🔍</a> — Play local video files</li>
+                    <li><a href="#" data-bs-toggle="modal" data-bs-target="#dynamicModal" data-url="/content/{youtube_item.pk}/modal/" class="content-link fw-bold text-decoration-none text-danger">YouTube 🔍</a> — Watch embedded YouTube videos</li>
                 </ul>
             ''',
             order=1,
@@ -203,68 +260,6 @@ class Command(BaseCommand):
             order=3,
         )
 
-        self.stdout.write(self.style.SUCCESS('Creating explanatory links...'))
-
-        # ── Explanatory Links ──
-        ExplanatoryLink.objects.create(
-            category=news_cat,
-            trigger_text='সন্দেহে',
-            explanation_title='সন্দেহে — Suspect Details',
-            explanation_text='''
-                <p>এই মামলায় মূল সন্দেহভাজন হলেন <strong>৪ জন ব্যক্তি</strong> যারা একটি সংঘবদ্ধ চক্রের সদস্য।</p>
-                <p>তারা দীর্ঘদিন ধরে বিভিন্ন জুয়েলারি দোকানে চুরির ঘটনা ঘটিয়ে আসছিল।
-                পুলিশ তাদের মোবাইল ফোনের টাওয়ার লোকেশন ট্র্যাক করে গ্রেফতার করে।</p>
-            ''',
-        )
-
-        ExplanatoryLink.objects.create(
-            category=news_cat,
-            trigger_text='Audio 🔍',
-            explanation_title='Audio Evidence',
-            explanation_text='''
-                <p>তদন্তকারীরা ফোন রেকর্ডিং থেকে গুরুত্বপূর্ণ <strong>অডিও প্রমাণ</strong> সংগ্রহ করেছেন।</p>
-                <p>এই অডিও ক্লিপগুলোতে চুরির পরিকল্পনা এবং স্বর্ণ বণ্টনের আলোচনা রেকর্ড হয়েছে।</p>
-            ''',
-        )
-
-        ExplanatoryLink.objects.create(
-            category=news_cat,
-            trigger_text='সমন্বয়কারী',
-            explanation_title='সমন্বয়কারী — Coordinator Role',
-            explanation_text='''
-                <p><strong>নুরুল ইসলাম</strong> এই চক্রের প্রধান সমন্বয়কারী ছিলেন।</p>
-                <p>তিনি মোটরসাইকেলে করে বিভিন্ন মার্কেট পরিদর্শন (রেকি) করতেন এবং
-                চুরির জন্য উপযুক্ত দোকান চিহ্নিত করতেন। তার কাছ থেকে রেকি করার সময়ের
-                ভিডিও ফুটেজও উদ্ধার করা হয়েছে।</p>
-            ''',
-        )
-
-        ExplanatoryLink.objects.create(
-            category=news_cat,
-            trigger_text='🖼️ স্বর্ণ',
-            explanation_title='স্বর্ণ — Gold Recovery Image',
-            explanation_text='''
-                <p>উদ্ধারকৃত স্বর্ণের ছবি এবং বিবরণ:</p>
-                <ul>
-                    <li>মোট উদ্ধার: <strong>১৯০ ভরি</strong></li>
-                    <li>প্রকার: নেকলেস, ব্রেসলেট, রিং, কানের দুল</li>
-                    <li>আনুমানিক বাজার মূল্য: <strong>৩ কোটি টাকা</strong></li>
-                </ul>
-                <p>বাকি স্বর্ণ খুঁজতে তদন্ত চলছে।</p>
-            ''',
-        )
-
-        ExplanatoryLink.objects.create(
-            category=news_cat,
-            trigger_text='🎬 স্বর্ণ',
-            explanation_title='স্বর্ণ — Video Evidence',
-            explanation_text='''
-                <p>CCTV ফুটেজ এবং ভিডিও প্রমাণ থেকে জানা যায়:</p>
-                <p>চোরেরা রাত ২টায় দোকানের পিছনের দরজা দিয়ে প্রবেশ করে।
-                তারা মাত্র <strong>১৫ মিনিটে</strong> পুরো অপারেশন সম্পন্ন করে।</p>
-                <p>ডিবি এই ভিডিও ফুটেজ বিশ্লেষণ করে অপরাধীদের শনাক্ত করেছে।</p>
-            ''',
-        )
 
         self.stdout.write(self.style.SUCCESS('Demo data loaded successfully!'))
         self.stdout.write(self.style.SUCCESS(f'   Categories: {Category.objects.count()}'))

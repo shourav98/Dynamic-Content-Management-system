@@ -466,11 +466,6 @@ body {
     background: rgba(211,47,47,0.1);
 }
 
-.rich-content .explanation-link::after {
-    content: ' 🔍';
-    font-size: 0.7em;
-}
-
 /* ─── SIDEBAR ─── */
 .sidebar-col {
     position: sticky;
