@@ -1,0 +1,285 @@
+{% extends 'cms/base.html' %}
+{% load static %}
+
+{% block title %}Interactive Teaching Platform – Home{% endblock %}
+
+{% block content %}
+
+{% if featured_category %}
+{% with cat=featured_category %}
+
+<div class="page-layout">
+
+    <!-- ============================================================
+         LEFT COLUMN – Main Content Area
+    ============================================================ -->
+    <div class="content-col">
+
+        <!-- ── Multimedia Content Examples Card ── -->
+        <section class="content-card mb-4" aria-label="Multimedia Content Examples">
+            <h2 class="section-heading">Multimedia Content Examples</h2>
+            <div class="divider-line"></div>
+
+            {% if cat.contents.all %}
+            <div class="media-buttons-grid">
+                {% for item in cat.contents.all %}
+                <button
+                    class="media-btn {% if item.is_premium %}premium-btn{% endif %}"
+                    data-content-id="{{ item.pk }}"
+                    data-content-type="{{ item.content_type }}"
+                    data-is-premium="{{ item.is_premium|yesno:'true,false' }}"
+                    data-url="{% url 'cms:content_modal' item.pk %}"
+                    data-bs-toggle="modal"
+                    data-bs-target="#dynamicModal"
+                    id="btn-content-{{ item.pk }}"
+                    title="View {{ item.get_content_type_display }}">
+
+                    <!-- Icon per type -->
+                    {% if item.content_type == 'text' %}
+                        <span class="media-icon text-icon"><i class="bi bi-type"></i></span>
+                        <span class="media-label">Text</span>
+                    {% elif item.content_type == 'image' %}
+                        <span class="media-icon image-icon"><i class="bi bi-image-fill"></i></span>
+                        <span class="media-label">Image</span>
+                    {% elif item.content_type == 'audio' %}
+                        <span class="media-icon audio-icon"><i class="bi bi-volume-up-fill"></i></span>
+                        <span class="media-label">Audio</span>
+                    {% elif item.content_type == 'video' %}
+                        <span class="media-icon video-icon"><i class="bi bi-camera-video-fill"></i></span>
+                        <span class="media-label">{{ item.title }}</span>
+                    {% elif item.content_type == 'youtube' %}
+                        <span class="media-icon youtube-icon"><i class="bi bi-youtube"></i></span>
+                        <span class="media-label">YouTube</span>
+                    {% endif %}
+
+                    <span class="search-icon"><i class="bi bi-search"></i></span>
+                    {% if item.is_premium %}<span class="premium-badge-sm"><i class="bi bi-star-fill"></i></span>{% endif %}
+                </button>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-muted fst-italic">No content items yet. Add them via the admin panel.</p>
+            {% endif %}
+        </section>
+
+        <!-- ── Subcategories with their content ── -->
+        {% for subcat in cat.subcategories.all %}
+        <section class="content-card mb-4" aria-label="{{ subcat.name }}">
+            <h2 class="section-heading">{{ subcat.name }}</h2>
+            <div class="divider-line"></div>
+
+            {% if subcat.contents.all %}
+            <div class="media-buttons-grid mb-3">
+                {% for item in subcat.contents.all %}
+                <button
+                    class="media-btn {% if item.is_premium %}premium-btn{% endif %}"
+                    data-content-id="{{ item.pk }}"
+                    data-content-type="{{ item.content_type }}"
+                    data-is-premium="{{ item.is_premium|yesno:'true,false' }}"
+                    data-url="{% url 'cms:content_modal' item.pk %}"
+                    data-bs-toggle="modal"
+                    data-bs-target="#dynamicModal"
+                    id="btn-content-{{ item.pk }}"
+                    title="View {{ item.get_content_type_display }}">
+
+                    {% if item.content_type == 'text' %}
+                        <span class="media-icon text-icon"><i class="bi bi-type"></i></span>
+                        <span class="media-label">Text</span>
+                    {% elif item.content_type == 'image' %}
+                        <span class="media-icon image-icon"><i class="bi bi-image-fill"></i></span>
+                        <span class="media-label">Image</span>
+                    {% elif item.content_type == 'audio' %}
+                        <span class="media-icon audio-icon"><i class="bi bi-volume-up-fill"></i></span>
+                        <span class="media-label">Audio</span>
+                    {% elif item.content_type == 'video' %}
+                        <span class="media-icon video-icon"><i class="bi bi-camera-video-fill"></i></span>
+                        <span class="media-label">{{ item.title }}</span>
+                    {% elif item.content_type == 'youtube' %}
+                        <span class="media-icon youtube-icon"><i class="bi bi-youtube"></i></span>
+                        <span class="media-label">YouTube</span>
+                    {% endif %}
+                    <span class="search-icon"><i class="bi bi-search"></i></span>
+                    {% if item.is_premium %}<span class="premium-badge-sm"><i class="bi bi-star-fill"></i></span>{% endif %}
+                </button>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Article body with interactive inline elements -->
+            {% for article in subcat.articles.all %}
+            <div class="article-body {{ article.is_premium|yesno:'premium-article,' }}" id="article-{{ article.pk }}">
+                <h3 class="article-title">{{ article.title }}</h3>
+                <div class="article-text rich-content">{{ article.body|safe }}</div>
+            </div>
+            {% endfor %}
+
+            <!-- Inline Explanatory Links for this sub-category -->
+            {% if subcat.explanatory_links.all %}
+            <div class="explanation-triggers mt-2">
+                {% for link in subcat.explanatory_links.all %}
+                <span
+                    class="inline-explanation-trigger"
+                    data-explanation-id="{{ link.pk }}"
+                    data-url="{% url 'cms:explanation_modal' link.pk %}"
+                    data-bs-toggle="modal"
+                    data-bs-target="#explanationModal"
+                    id="exp-{{ link.pk }}"
+                    title="Click to see explanation">
+                    {{ link.trigger_text }}
+                    <i class="bi bi-info-circle-fill"></i>
+                </span>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </section>
+        {% endfor %}
+
+        <!-- ── Main articles for the root category ── -->
+        {% for article in cat.articles.all %}
+        <section class="content-card mb-4" id="article-section-{{ article.pk }}">
+            <h2 class="article-title">{{ article.title }}</h2>
+            <div class="divider-line"></div>
+            <div class="article-text rich-content">{{ article.body|safe }}</div>
+            {% if article.is_premium %}
+            <div class="premium-overlay-banner">
+                <i class="bi bi-lock-fill"></i> Premium Content
+            </div>
+            {% endif %}
+        </section>
+        {% endfor %}
+
+        <!-- ── Explanatory Links for root category ── -->
+        {% if cat.explanatory_links.all %}
+        <section class="content-card mb-4">
+            <h2 class="section-heading">Interactive Explanations</h2>
+            <div class="divider-line"></div>
+            <div class="d-flex flex-wrap gap-2 mt-2">
+                {% for link in cat.explanatory_links.all %}
+                <span
+                    class="inline-explanation-trigger"
+                    data-explanation-id="{{ link.pk }}"
+                    data-url="{% url 'cms:explanation_modal' link.pk %}"
+                    data-bs-toggle="modal"
+                    data-bs-target="#explanationModal"
+                    id="exp-root-{{ link.pk }}">
+                    {{ link.trigger_text }}
+                    <i class="bi bi-info-circle-fill"></i>
+                </span>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+
+    </div>
+    <!-- END LEFT COLUMN -->
+
+    <!-- ============================================================
+         RIGHT COLUMN – Expandable Sections
+    ============================================================ -->
+    <aside class="sidebar-col" aria-label="Expandable Content">
+        <div class="sidebar-card">
+            <h2 class="sidebar-heading">Expandable Content</h2>
+            <div class="divider-line mb-3"></div>
+
+            {% if cat.expandable_sections.all %}
+            <div class="expandable-accordion" id="accordionSidebar">
+                {% for section in cat.expandable_sections.all %}
+                <div class="accordion-item-custom">
+                    <button
+                        class="accordion-trigger {% if section.is_open_by_default %}open{% endif %}"
+                        data-target="accordion-body-{{ section.pk }}"
+                        id="accordion-btn-{{ section.pk }}"
+                        aria-expanded="{{ section.is_open_by_default|yesno:'true,false' }}">
+                        <span>{{ section.title }}</span>
+                        <i class="bi bi-chevron-down accordion-icon"></i>
+                    </button>
+                    <div
+                        class="accordion-body-custom {% if section.is_open_by_default %}open{% endif %}"
+                        id="accordion-body-{{ section.pk }}">
+                        <div class="rich-content">{{ section.body|safe }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <!-- Default expandable sections when no data -->
+            <div class="expandable-accordion">
+                <div class="accordion-item-custom">
+                    <button class="accordion-trigger open" data-target="default-intro" aria-expanded="true">
+                        <span>Introduction</span>
+                        <i class="bi bi-chevron-down accordion-icon"></i>
+                    </button>
+                    <div class="accordion-body-custom open" id="default-intro">
+                        <p>Welcome to the Interactive Teaching Platform. Add expandable sections via the admin panel.</p>
+                    </div>
+                </div>
+                <div class="accordion-item-custom">
+                    <button class="accordion-trigger" data-target="default-detail" aria-expanded="false">
+                        <span>Detailed Explanation</span>
+                        <i class="bi bi-chevron-down accordion-icon"></i>
+                    </button>
+                    <div class="accordion-body-custom" id="default-detail">
+                        <p>Detailed explanations go here.</p>
+                    </div>
+                </div>
+                <div class="accordion-item-custom">
+                    <button class="accordion-trigger" data-target="default-resources" aria-expanded="false">
+                        <span>Additional Resources</span>
+                        <i class="bi bi-chevron-down accordion-icon"></i>
+                    </button>
+                    <div class="accordion-body-custom" id="default-resources">
+                        <p>Extra resources and links.</p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Sub-category tree sidebar -->
+        {% if cat.subcategories.all %}
+        <div class="sidebar-card mt-3">
+            <h2 class="sidebar-heading">Sub-Categories</h2>
+            <div class="divider-line mb-3"></div>
+            <ul class="category-tree">
+                {% for subcat in cat.subcategories.all %}
+                <li class="category-tree-item">
+                    <a href="{% url 'cms:category_detail' subcat.slug %}" class="tree-link">
+                        <i class="bi bi-folder2 me-1"></i> {{ subcat.name }}
+                        {% if subcat.is_premium %}<i class="bi bi-star-fill premium-star ms-1"></i>{% endif %}
+                    </a>
+                    {% if subcat.subcategories.all %}
+                    <ul class="category-subtree">
+                        {% for sub2 in subcat.subcategories.all %}
+                        <li>
+                            <a href="{% url 'cms:category_detail' sub2.slug %}" class="tree-link">
+                                <i class="bi bi-file-text me-1"></i> {{ sub2.name }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+    </aside>
+    <!-- END RIGHT COLUMN -->
+
+</div>
+{% endwith %}
+
+{% else %}
+<!-- No categories yet -->
+<div class="empty-state">
+    <div class="empty-icon"><i class="bi bi-database-add"></i></div>
+    <h2>Welcome to the Interactive Teaching Platform</h2>
+    <p>No categories found. Please go to the <a href="/admin/" class="admin-link">Admin Panel</a> to add Categories, Content Items, and Articles.</p>
+    <a href="/admin/cms/category/add/" class="btn-primary-custom mt-3">
+        <i class="bi bi-plus-circle me-2"></i> Add First Category
+    </a>
+</div>
+{% endif %}
+
+{% endblock %}

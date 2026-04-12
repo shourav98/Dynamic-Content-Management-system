@@ -1,0 +1,131 @@
+<!-- Content Modal Partial – loaded via AJAX -->
+<div class="modal-header modal-header-custom">
+    <div class="modal-title-wrap">
+        {% if item.content_type == 'text' %}
+            <i class="bi bi-type modal-type-icon text-icon"></i>
+        {% elif item.content_type == 'image' %}
+            <i class="bi bi-image-fill modal-type-icon image-icon"></i>
+        {% elif item.content_type == 'audio' %}
+            <i class="bi bi-volume-up-fill modal-type-icon audio-icon"></i>
+        {% elif item.content_type == 'video' %}
+            <i class="bi bi-camera-video-fill modal-type-icon video-icon"></i>
+        {% elif item.content_type == 'youtube' %}
+            <i class="bi bi-youtube modal-type-icon youtube-icon"></i>
+        {% endif %}
+        <h5 class="modal-title" id="dynamicModalLabel">{{ item.title }}</h5>
+    </div>
+    {% if item.is_premium %}
+    <span class="premium-badge"><i class="bi bi-star-fill me-1"></i>Premium</span>
+    {% endif %}
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+
+<div class="modal-body modal-body-custom">
+
+    {% if item.content_type == 'text' %}
+    <!-- ── RICH TEXT ── -->
+    <div class="rich-content modal-rich-text">
+        {{ item.text_content|safe }}
+    </div>
+
+    {% elif item.content_type == 'image' %}
+    <!-- ── IMAGE ── -->
+    <div class="modal-media-container text-center">
+        {% if item.image %}
+        <img src="{{ item.image.url }}" alt="{{ item.title }}" class="modal-image img-fluid" loading="lazy">
+        {% else %}
+        <div class="no-media-placeholder">
+            <i class="bi bi-image"></i>
+            <p>No image uploaded</p>
+        </div>
+        {% endif %}
+    </div>
+
+    {% elif item.content_type == 'audio' %}
+    <!-- ── AUDIO ── -->
+    <div class="modal-media-container audio-container">
+        <div class="audio-visual">
+            <i class="bi bi-music-note-beamed audio-big-icon"></i>
+            <p class="audio-track-name">{{ item.title }}</p>
+        </div>
+        {% if item.audio_file %}
+        <audio controls class="w-100 mt-3" preload="metadata">
+            <source src="{{ item.audio_file.url }}" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        {% else %}
+        <div class="no-media-placeholder">
+            <i class="bi bi-music-note"></i>
+            <p>No audio file uploaded</p>
+        </div>
+        {% endif %}
+    </div>
+
+    {% elif item.content_type == 'video' %}
+    <!-- ── LOCAL VIDEO ── -->
+    <div class="modal-media-container video-container">
+        {% if item.video_file %}
+        <video controls class="w-100" preload="metadata" playsinline>
+            <source src="{{ item.video_file.url }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        {% else %}
+        <div class="no-media-placeholder">
+            <i class="bi bi-camera-video"></i>
+            <p>No video file uploaded</p>
+        </div>
+        {% endif %}
+    </div>
+
+    {% elif item.content_type == 'youtube' %}
+    <!-- ── YOUTUBE EMBED ── -->
+    <div class="modal-media-container youtube-container">
+        {% if item.youtube_url %}
+        <div class="ratio ratio-16x9">
+            <iframe
+                src="{{ item.get_embed_url }}"
+                title="{{ item.title }}"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen>
+            </iframe>
+        </div>
+        {% else %}
+        <div class="no-media-placeholder">
+            <i class="bi bi-youtube"></i>
+            <p>No YouTube URL provided</p>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Supplementary text for any type -->
+    {% if item.content_type != 'text' and item.text_content %}
+    <div class="modal-supplementary-text mt-3">
+        <hr class="modal-divider">
+        <div class="rich-content">{{ item.text_content|safe }}</div>
+    </div>
+    {% endif %}
+
+    <!-- Explanatory links attached to this content item -->
+    {% if item.explanatory_links.all %}
+    <div class="modal-explanations mt-3">
+        <hr class="modal-divider">
+        <h6 class="explanation-heading"><i class="bi bi-lightbulb-fill me-1"></i> Explanations</h6>
+        {% for link in item.explanatory_links.all %}
+        <div class="explanation-card">
+            <strong>{{ link.trigger_text }}</strong>
+            <div class="rich-content mt-1">{{ link.explanation_text|safe }}</div>
+            {% if link.explanation_image %}
+            <img src="{{ link.explanation_image.url }}" alt="Explanation" class="explanation-img mt-2 img-fluid">
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+</div>
+
+<div class="modal-footer modal-footer-custom">
+    <span class="modal-type-tag">{{ item.get_content_type_display }}</span>
+    <button type="button" class="btn-modal-close" data-bs-dismiss="modal">Close</button>
+</div>

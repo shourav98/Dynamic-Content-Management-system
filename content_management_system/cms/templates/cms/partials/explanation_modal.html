@@ -1,0 +1,36 @@
+<!-- Explanation Modal Partial – loaded via AJAX -->
+<div class="modal-header modal-header-explanation">
+    <div class="modal-title-wrap">
+        <i class="bi bi-lightbulb-fill explanation-modal-icon"></i>
+        <h5 class="modal-title" id="explanationModalLabel">
+            {{ link.explanation_title|default:link.trigger_text }}
+        </h5>
+    </div>
+    {% if link.is_premium %}
+    <span class="premium-badge"><i class="bi bi-star-fill me-1"></i>Premium</span>
+    {% endif %}
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+
+<div class="modal-body modal-body-custom">
+    <div class="explanation-highlight-box">
+        <div class="highlight-trigger-word">
+            <i class="bi bi-chat-quote-fill me-2"></i>"{{ link.trigger_text }}"
+        </div>
+    </div>
+
+    <div class="rich-content explanation-rich-text mt-3">
+        {{ link.explanation_text|safe }}
+    </div>
+
+    {% if link.explanation_image %}
+    <div class="explanation-image-box mt-3">
+        <img src="{{ link.explanation_image.url }}" alt="Explanation for {{ link.trigger_text }}" class="img-fluid explanation-modal-img">
+    </div>
+    {% endif %}
+</div>
+
+<div class="modal-footer modal-footer-custom">
+    <span class="modal-type-tag explanation-tag">Explanation</span>
+    <button type="button" class="btn-modal-close" data-bs-dismiss="modal">Close</button>
+</div>
