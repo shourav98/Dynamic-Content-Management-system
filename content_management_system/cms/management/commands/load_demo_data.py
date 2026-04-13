@@ -3,6 +3,7 @@ Management command to populate the database with demo data
 matching the Interactive Teaching Platform design.
 """
 from django.core.management.base import BaseCommand
+from django.contrib.auth.models import User
 from cms.models import Category, ContentItem, ExplanatoryLink, ExpandableSection, ArticleContent
 
 
@@ -10,6 +11,11 @@ class Command(BaseCommand):
     help = 'Loads demo data for the Interactive Teaching Platform'
 
     def handle(self, *args, **options):
+        # Create a default admin user
+        if not User.objects.filter(username='admin').exists():
+            User.objects.create_superuser('admin', 'admin@example.com', 'admin123')
+            self.stdout.write(self.style.SUCCESS('Created default superuser: admin / admin123'))
+
         self.stdout.write(self.style.WARNING('Clearing existing CMS data...'))
         ArticleContent.objects.all().delete()
         ExpandableSection.objects.all().delete()
